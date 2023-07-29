@@ -22,6 +22,8 @@ let jwtOptions = {
 
 app.use(express.json());
 app.use(cors());
+passport.use(strategy);
+app.use(passport.initialize());
 
 let strategy = new JwtStrategy(jwtOptions, function (jwt_payload, next) {
     console.log('payload received', jwt_payload);
