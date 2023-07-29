@@ -20,33 +20,21 @@ let jwtOptions = {
 };
 
 
-// let strategy = new JwtStrategy(jwtOptions, function (jwt_payload, next) {
-//     console.log('payload received', jwt_payload);
-
-//     if (jwt_payload) {
-//         next(null, {
-//             _id: jwt_payload._id,
-//             userName: jwt_payload.userName,
-//             favourites: jwt_payload.favourites,
-//             history: jwt_payload.history
-//         });
-//     } else {
-//         next(null, false);
-//     }
-// });
-
 let strategy = new JwtStrategy(jwtOptions, function (jwt_payload, next) {
-    console.log("payload received", jwt_payload);
+    console.log('payload received', jwt_payload);
 
     if (jwt_payload) {
         next(null, {
             _id: jwt_payload._id,
             userName: jwt_payload.userName,
+            favourites: jwt_payload.favourites,
+            history: jwt_payload.history
         });
     } else {
         next(null, false);
     }
 });
+
 
 app.use(express.json());
 app.use(cors());
@@ -64,23 +52,22 @@ app.post("/api/user/register", (req, res) => {
 });
 
 
+app.post("/api/user/login", (req, res) => {
+    userService.checkUser(req.body)
+        .then((user) => {
+            let payload = {
+                _id: user._id,
+                userName: user.userName,
+                favourites: user.favourites,
+                history: user.history
+            };
 
-// app.post("/api/user/login", (req, res) => {
-//     userService.checkUser(req.body)
-//         .then((user) => {
-//             let payload = {
-//                 _id: user._id,
-//                 userName: user.userName,
-//                 favourites: user.favourites,
-//                 history: user.history
-//             };
-
-//             let token = jwt.sign(payload, jwtOptions.secretOrKey);
-//             res.json({ message: 'login successful', token: token });
-//         }).catch(msg => {
-//             res.status(422).json({ "message": msg });
-//         });
-// });
+            let token = jwt.sign(payload, jwtOptions.secretOrKey);
+            res.json({ message: 'login successful', token: token });
+        }).catch(msg => {
+            res.status(422).json({ "message": msg });
+        });
+});
 
 app.post("/api/user/login", (req, res) => {
     userService
