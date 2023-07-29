@@ -19,10 +19,6 @@ let jwtOptions = {
     secretOrKey: process.env.JWT_SECRET,
 };
 
-app.use(express.json());
-app.use(cors());
-passport.use(strategy);
-app.use(passport.initialize());
 
 let strategy = new JwtStrategy(jwtOptions, function (jwt_payload, next) {
     console.log('payload received', jwt_payload);
@@ -40,6 +36,10 @@ let strategy = new JwtStrategy(jwtOptions, function (jwt_payload, next) {
 });
 
 
+app.use(express.json());
+app.use(cors());
+passport.use(strategy);
+app.use(passport.initialize());
 
 
 app.post("/api/user/register", (req, res) => {
