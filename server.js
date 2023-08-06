@@ -1,3 +1,16 @@
+/*********************************************************************************
+*  WEB422 – Assignment 6
+*  I declare that this assignment is my own work in accordance with Seneca Academic Policy.  
+*  No part of this assignment has been copied manually or electronically from any other source
+*  (including web sites) or distributed to other students.
+* 
+*  Name: Ananthakrishnan Arunkumar Student ID: 134658210 Date: August 2
+*  Vercel App (Deployed) Link: https://web422-assignment6-gilt.vercel.app/
+
+*
+********************************************************************************/
+
+
 const express = require('express');
 const app = express();
 const cors = require("cors");
@@ -69,22 +82,6 @@ app.post("/api/user/login", (req, res) => {
         });
 });
 
-app.post("/api/user/login", (req, res) => {
-    userService
-        .checkUser(req.body)
-        .then((user) => {
-            const payload = {
-                _id: user._id,
-                userName: user.userName,
-            };
-            const token = jwt.sign(payload, process.env.JWT_SECRET);
-            res.json({ message: { token } });
-        })
-        .catch((err) => {
-            res.status(401).json({ message: err });
-        });
-});
-
 app.get("/api/user/favourites", passport.authenticate('jwt', { session: false }), (req, res) => {
     userService.getFavourites(req.user._id)
         .then(data => {
@@ -94,7 +91,6 @@ app.get("/api/user/favourites", passport.authenticate('jwt', { session: false })
         })
 
 });
-
 
 
 app.put("/api/user/favourites/:id", passport.authenticate('jwt', { session: false }), (req, res) => {
